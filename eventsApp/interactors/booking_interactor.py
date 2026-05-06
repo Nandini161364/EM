@@ -17,6 +17,7 @@ class BookingInteractor:
         does_attendee_exist = self.storage.get_attendee_by_id(attendee_id)
         seats_available = self.storage.seats_available(event_id)
         is_already_booked = self.storage.is_already_booked(bookingDto)
+        is_pending_or_cancelled_booking_exists = self.storage.is_pending_or_cancelled_booking_exists(bookingDto)
 
         if not (event_id and attendee_id):
             raise InvalidDataException("Data can't be empty")
@@ -29,7 +30,13 @@ class BookingInteractor:
         if not seats_available:
             raise TicketsNotAvailableException("Tickets not Available")
         
-        newBookingId = self.storage.create_booking(bookingDto)
+        newBookingId = ""
+
+        if is_pending_or_cancelled_booking_exists:
+            newBookingId = self.storage.update_booking(bookingDto)
+        else:
+            newBookingId = self.storage.create_booking(bookingDto)
+        
 
         return self.presenter.booking_success(newBookingId)
 
@@ -42,7 +49,6 @@ class BookingInteractor:
 
         valid_booking = self.storage.get_booking_details_by_id(booking_id)
         does_attendee_exist = self.storage.get_attendee_by_id(attendee_id)
-        # already_cancelled = self.storage.is_already_booked()
 
         if not valid_booking:
             raise InvalidBookingIdException("Booking Id is not valid")
