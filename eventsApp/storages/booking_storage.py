@@ -34,6 +34,16 @@ class BookingStorage:
             ).exists()
         except Booking.DoesNotExist:
             return None
+        
+    def is_pending_or_cancelled_booking_exists(self, bookingDto):
+        try:
+            return Booking.objects.filter(
+                Q(booking_status = 'pending') | Q(booking_status = 'cancelled'),
+                event_id = bookingDto.event_id,
+                attendee_id = bookingDto.attendee_id
+            ).exists()
+        except Booking.DoesNotExist:
+            return None
 
     def create_booking(self, bookingDto):
         self.bookingDto = bookingDto
@@ -50,14 +60,24 @@ class BookingStorage:
 
         return response.id
     
+    def update_booking(self, bookingDto):
+        event_id = bookingDto.event_id
+        attendee_id = bookingDto.attendee_id
+        try:
+            existing_booking = Booking.objects.get(Q(event_id= event_id), Q(attendee_id=attendee_id))
+        except Booking.DoesNotExist:
+            return None
+
+        existing_booking.booking_status = 'booked'
+        existing_booking.save()
+        return existing_booking.id
+        
     def get_booking_details_by_id(self, booking_id):
         try:
             return Booking.objects.get(id=booking_id)
         except Booking.DoesNotExist:
             return None
-        
-    # def is_already_cancelled(self, )
-        
+                
     def cancel_booking(self, bookingDto):
         booking_id = bookingDto.booking_id
         attendee_id = bookingDto.attendee_id
@@ -67,6 +87,7 @@ class BookingStorage:
             return None
 
         if existing_booking.booking_status == 'cancelled':
+            print("Already Cancelled")
             return False
 
         existing_booking.booking_status = 'cancelled'

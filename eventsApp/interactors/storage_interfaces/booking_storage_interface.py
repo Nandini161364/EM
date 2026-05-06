@@ -28,3 +28,10 @@ class BookingStorageInterface(ABC):
     @abstractmethod
     def cancel_booking(self, bookingDto:CancelBookingDto):
         pass
+    @abstractmethod
+    def is_pending_or_cancelled_booking_exists(self, bookingDto: CreateBookingDto):
+        pass
+
+    @abstractmethod
+    def update_booking(self, bookingDto:CreateBookingDto):
+        pass
