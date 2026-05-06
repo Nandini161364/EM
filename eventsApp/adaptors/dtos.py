@@ -24,3 +24,8 @@ class CreatePersonDTO:
 class CreateBookingDto:
     event_id: int
     attendee_id: int
+
+@dataclass
+class CancelBookingDto:
+    booking_id: int
+    attendee_id: int

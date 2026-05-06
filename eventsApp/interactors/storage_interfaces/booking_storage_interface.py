@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from eventsApp.adaptors.dtos import CreateBookingDto
+from eventsApp.adaptors.dtos import CreateBookingDto, CancelBookingDto
 
 class BookingStorageInterface(ABC):
     @abstractmethod
@@ -19,4 +19,12 @@ class BookingStorageInterface(ABC):
 
     @abstractmethod
     def is_already_booked(self, bookingDto:CreateBookingDto):
+        pass
+
+    @abstractmethod
+    def get_booking_details_by_id(self, booking_id:int):
+        pass
+
+    @abstractmethod
+    def cancel_booking(self, bookingDto:CancelBookingDto):
         pass

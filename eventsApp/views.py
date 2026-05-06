@@ -2,7 +2,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 
-from eventsApp.adaptors.dtos import CreateEventDTO, CreatePersonDTO, CreateBookingDto
+from eventsApp.adaptors.dtos import CreateEventDTO, CreatePersonDTO, CreateBookingDto, CancelBookingDto
 
 from eventsApp.storages.event_storage import EventStorage
 from eventsApp.storages.person_storage import PersonStorage
@@ -16,7 +16,7 @@ from eventsApp.interactors.create_event_interactor import CreateEventInteractor
 from eventsApp.interactors.person_interactor import CreatePersonInteractor
 from eventsApp.interactors.booking_interactor import BookingInteractor
 
-from eventsApp.exceptions.exceptions import OrganizerNotFoundException, InvalidDataException, UserAlreadyExitsException, EventDoesnotExistException, AttendeeDoesnotExist, TicketsNotAvailableException, AlreadyBookedException
+from eventsApp.exceptions.exceptions import OrganizerNotFoundException, InvalidDataException, UserAlreadyExitsException, EventDoesnotExistException, AttendeeDoesnotExist, TicketsNotAvailableException, AlreadyBookedException, InvalidBookingIdException
 
 @api_view(['POST'])
 def create_event(request):
@@ -97,3 +97,22 @@ def event_booking(request):
     except TicketsNotAvailableException as e:
         return Response(BookingPresenter().seats_full(), 400)
 
+
+@api_view(['POST'])
+def cancel_booking(request):
+    try:
+        booking_id = request.data.get("booking_id")
+        attendee_id = request.data.get("attendee_id")
+
+        cancelBookingDto = CancelBookingDto(booking_id, attendee_id)
+
+        interactor = BookingInteractor(storage=BookingStorage(), presenter=BookingPresenter())
+        response = interactor.cancel_booking(cancelBookingDto)
+
+        return Response(response, 200)
+    except AttendeeDoesnotExist as e:
+        return Response(BookingPresenter().invalid_attendee(), 400)
+    except InvalidDataException as e:
+        return Response(BookingPresenter().invalid_data(), 400)
+    except InvalidBookingIdException as e:
+        return Response(BookingPresenter().invalid_booking(), 400)

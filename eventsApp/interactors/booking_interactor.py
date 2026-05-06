@@ -1,4 +1,4 @@
-from eventsApp.exceptions.exceptions import InvalidDataException, EventDoesnotExistException, AttendeeDoesnotExist, TicketsNotAvailableException, AlreadyBookedException
+from eventsApp.exceptions.exceptions import InvalidDataException, EventDoesnotExistException, AttendeeDoesnotExist, TicketsNotAvailableException, AlreadyBookedException, InvalidBookingIdException
 from eventsApp.interactors.presenter_interfaces.booking_presenter_interface import BookingPresenterInterface
 from eventsApp.interactors.storage_interfaces.booking_storage_interface import BookingStorageInterface
 
@@ -34,3 +34,25 @@ class BookingInteractor:
         return self.presenter.booking_success(newBookingId)
 
         
+    def cancel_booking(self, bookingDto):
+        self.bookingDto = bookingDto
+
+        booking_id = bookingDto.booking_id
+        attendee_id = bookingDto.attendee_id
+
+        valid_booking = self.storage.get_booking_details_by_id(booking_id)
+        does_attendee_exist = self.storage.get_attendee_by_id(attendee_id)
+        # already_cancelled = self.storage.is_already_booked()
+
+        if not valid_booking:
+            raise InvalidBookingIdException("Booking Id is not valid")
+        if not (booking_id and attendee_id):
+            raise InvalidDataException("Data can't be empty")
+        if not does_attendee_exist:
+            raise AttendeeDoesnotExist("Attendee is not there")
+        
+        
+        response = self.storage.cancel_booking(bookingDto)
+
+        return self.presenter.booking_cancelled()
+

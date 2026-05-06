@@ -18,3 +18,6 @@ class TicketsNotAvailableException(Exception):
 
 class AlreadyBookedException(Exception):
     pass
+
+class InvalidBookingIdException(Exception):
+    pass

@@ -27,3 +27,11 @@ class BookingPresenter:
         return {
             "message": "Already Registered for the Event"
         }
+    def booking_cancelled(self):
+        return {
+            "message": "Booking got Cancelled Successfully"
+        }
+    def invalid_booking(self):
+        return {
+            "message": "Invalid Booking Id"
+        }

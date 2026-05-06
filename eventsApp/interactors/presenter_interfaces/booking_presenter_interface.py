@@ -19,3 +19,7 @@ class BookingPresenterInterface(ABC):
     @abstractmethod
     def already_booked(self):
         pass
+    
+    @abstractmethod
+    def booking_cancelled(self):
+        pass
