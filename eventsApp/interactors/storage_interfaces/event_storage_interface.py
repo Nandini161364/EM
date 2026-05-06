@@ -9,3 +9,6 @@ class EventStorageInterface(ABC):
     @abstractmethod
     def get_organizer(self, organizerId: int):
         pass
+    @abstractmethod
+    def create_ticket(self, event_id: int, price: float):
+        pass

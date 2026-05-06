@@ -10,3 +10,6 @@ class EventPresenterInterface(ABC):
     @abstractmethod
     def organizer_not_found(self):
         pass
+    # @abstractmethod
+    # def dummy_event(self):
+    #     pass
