@@ -1,4 +1,5 @@
 from eventsApp.models import Event, Person, Ticket, Booking
+from django.db.models import Q
 
 class BookingStorage:
     def get_event_by_id(self, event_id):
@@ -49,3 +50,25 @@ class BookingStorage:
 
         return response.id
     
+    def get_booking_details_by_id(self, booking_id):
+        try:
+            return Booking.objects.get(id=booking_id)
+        except Booking.DoesNotExist:
+            return None
+        
+    # def is_already_cancelled(self, )
+        
+    def cancel_booking(self, bookingDto):
+        booking_id = bookingDto.booking_id
+        attendee_id = bookingDto.attendee_id
+        try:
+            existing_booking = Booking.objects.get(Q(id=booking_id), Q(attendee_id=attendee_id))
+        except Booking.DoesNotExist:
+            return None
+
+        if existing_booking.booking_status == 'cancelled':
+            return False
+
+        existing_booking.booking_status = 'cancelled'
+        existing_booking.save()
+        return True
