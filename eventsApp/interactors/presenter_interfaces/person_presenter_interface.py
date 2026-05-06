@@ -9,3 +9,7 @@ class PersonPresenterInterface(ABC):
     @abstractmethod
     def invalid_data(self):
         pass
+
+    @abstractmethod
+    def invalid_mail(self):
+        pass

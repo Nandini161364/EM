@@ -9,3 +9,8 @@ class PersonStorage:
 
         response = Person.objects.create(name=name, email=email, password=password)
         return response.id
+    
+    def get_person_by_mail(self, email):
+        self.email = email
+
+        return Person.objects.get(email=email)
