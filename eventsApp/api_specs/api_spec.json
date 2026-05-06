@@ -81,6 +81,50 @@
                 }
             },
             "required": ["event_title","description","organizer","start_date","end_date","venue","is_paid", "maximum_attendees", "ticket_price"]
+        },
+        "CreateUser": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                }
+            },
+            "required": ["name", "email", "password"]
+        },
+        "CreateBooking": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "attendee_id": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "event_id": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "booking_date": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "booking_status": {
+                    "type": "string"
+                }
+            },
+            "required": ["attendee_id", "event_id"]
         }
     },
     "paths": {
@@ -103,6 +147,98 @@
                 "responses": {
                     "201": {
                         "description": "Event created successfully",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "id": {
+                                    "type": "integer",
+                                    "format": "int64"
+                                },
+                                "message": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "oauth": ["write", "admin"]
+                    }
+                ]
+            }
+        },
+        "/events/user":{
+            "post": {
+                "summary": "Create a new User",
+                "description": "This endpoint allows to add users",
+                "operationId": "create_user",
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "Person object that needs to be created",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/CreateUser"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "User created successfully",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "id": {
+                                    "type": "integer",
+                                    "format": "int64"
+                                },
+                                "message": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "oauth": ["write", "admin"]
+                    }
+                ]
+            }
+        },
+        "/events/booking":{
+            "post": {
+                "summary": "Event Registration",
+                "description": "This endpoint allows users to book tickets for an event",
+                "operationId": "create_booking",
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "Booking object that needs to be created",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/CreateBooking"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Booked successfully",
                         "schema": {
                             "type": "object",
                             "properties": {
