@@ -13,7 +13,7 @@ from eventsApp.presenters.person_presenter import PersonPresenter
 from eventsApp.interactors.create_event_interactor import CreateEventInteractor
 from eventsApp.interactors.person_interactor import CreatePersonInteractor
 
-from eventsApp.exceptions.exceptions import OrganizerNotFoundException, InvalidDataException
+from eventsApp.exceptions.exceptions import OrganizerNotFoundException, InvalidDataException, UserAlreadyExitsException
 
 @api_view(['POST'])
 def create_event(request):
@@ -62,6 +62,8 @@ def user_login(request):
         response = interactor.create_person(personDto)
 
         return Response(response, 200)
+    except UserAlreadyExitsException as e:
+        return Response(PersonPresenter().invalid_mail(), 400)
     except InvalidDataException as e:
         return Response(PersonPresenter().invalid_data(), 400)
 

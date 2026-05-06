@@ -3,3 +3,6 @@ class OrganizerNotFoundException(Exception):
 
 class InvalidDataException(Exception):
     pass
+
+class UserAlreadyExitsException(Exception):
+    pass
