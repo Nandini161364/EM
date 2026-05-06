@@ -67,3 +67,10 @@ def user_login(request):
     except InvalidDataException as e:
         return Response(PersonPresenter().invalid_data(), 400)
 
+@api_view(['POST'])
+def event_booking(request):
+    try:
+        pass
+    except InvalidDataException as e:
+        pass
+
