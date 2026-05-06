@@ -1,5 +1,5 @@
 from eventsApp.interactors.storage_interfaces.event_storage_interface import EventStorageInterface
-from eventsApp.interactors.presenter_interfaces.event_presenter import EventPresenterInterface
+from eventsApp.interactors.presenter_interfaces.event_presenter_interface import EventPresenterInterface
 
 from eventsApp.exceptions.exceptions import OrganizerNotFoundException, InvalidDataException
 

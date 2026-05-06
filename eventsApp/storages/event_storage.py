@@ -1,6 +1,7 @@
 from eventsApp.models import Event, Organizer, Ticket
+from eventsApp.interactors.storage_interfaces.event_storage_interface import EventStorageInterface
 
-class EventStorage:
+class EventStorage(EventStorageInterface):
     def get_organizer(self, organizer):
         try:
             return Organizer.objects.get(id = organizer)
