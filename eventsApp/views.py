@@ -15,8 +15,9 @@ from eventsApp.presenters.booking_presenter import BookingPresenter
 from eventsApp.interactors.create_event_interactor import CreateEventInteractor
 from eventsApp.interactors.person_interactor import CreatePersonInteractor
 from eventsApp.interactors.booking_interactor import BookingInteractor
+from eventsApp.interactors.get_event_details_interactor import GetEventDetailsInteractor
 
-from eventsApp.exceptions.exceptions import OrganizerNotFoundException, InvalidDataException, UserAlreadyExitsException, EventDoesnotExistException, AttendeeDoesnotExist, TicketsNotAvailableException, AlreadyBookedException, InvalidBookingIdException
+from eventsApp.exceptions.exceptions import OrganizerNotFoundException, InvalidDataException, UserAlreadyExitsException, EventDoesnotExistException, AttendeeDoesnotExist, TicketsNotAvailableException, AlreadyBookedException, InvalidBookingIdException, EventNotFoundException
 
 @api_view(['POST'])
 def create_event(request):
@@ -116,3 +117,15 @@ def cancel_booking(request):
         return Response(BookingPresenter().invalid_data(), 400)
     except InvalidBookingIdException as e:
         return Response(BookingPresenter().invalid_booking(), 400)
+
+@api_view(['GET'])
+def get_event_details(request, event_id):
+    try:
+        interactor = GetEventDetailsInteractor(storage=EventStorage(), presenter = EventPresenter())
+
+        response = interactor.get_event_details(event_id)
+
+        return Response(response, 200)
+    except EventNotFoundException as e:
+        return Response(EventPresenter().invalid_event(), 400)
+    

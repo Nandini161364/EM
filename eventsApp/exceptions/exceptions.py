@@ -21,3 +21,6 @@ class AlreadyBookedException(Exception):
 
 class InvalidBookingIdException(Exception):
     pass
+
+class EventNotFoundException(Exception):
+    pass

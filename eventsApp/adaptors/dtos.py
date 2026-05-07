@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from datetime import datetime
+from typing import List, Optional
 
 
 @dataclass
@@ -29,3 +30,36 @@ class CreateBookingDto:
 class CancelBookingDto:
     booking_id: int
     attendee_id: int
+
+@dataclass
+class OrganizerDetailsDto:
+    organization_name: str
+    organization_email: str
+    organizer_name: str
+    organizer_email:str
+    organizer_id: int
+
+@dataclass
+class AttendeeDetailsDto:
+    attendee_id: int
+    attendee_name: str
+    attendee_email: str
+
+@dataclass
+class TicketDetailsDto:
+    ticket_price: float
+
+@dataclass
+class EventDetailsDto:
+    id: int
+    event_title: str
+    description: str
+    start_date: datetime
+    end_date: datetime
+    venue: str
+    maximum_attendees: int
+    organizer_details: List[OrganizerDetailsDto]
+    attendee_details: List[AttendeeDetailsDto]
+    booking_cancelled_users: List[AttendeeDetailsDto]
+    booking_pending_users: List[AttendeeDetailsDto]
+    ticket_details: List[TicketDetailsDto]

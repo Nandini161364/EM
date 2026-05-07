@@ -14,7 +14,58 @@ class EventPresenter(EventPresenterInterface):
         return {
             "message": "Please ensure all the required fields are passed with proper values"
         }
+    def invalid_event(self):
+        return {
+            "message": "Event not found"
+        }
     # def dummy_event(self):
     #     return {
     #         "message": "Dummy Function"
     #     }
+
+    def get_event_details_success_response(self, eventDetailsDto):
+        return {
+            'id': eventDetailsDto.id,
+            'event_title': eventDetailsDto.event_title,
+            'description': eventDetailsDto.description,
+            'start_date': eventDetailsDto.start_date,
+            'end_date': eventDetailsDto.end_date,
+            'venue': eventDetailsDto.venue,
+            'maximum_attendees': eventDetailsDto.maximum_attendees,
+            'organizer_details': [
+                {
+                    'organizer_id': organizer.organizer_id,
+                    'organization_name': organizer.organization_name,
+                    'organization_email':organizer.organization_email,
+                    'organizer_email':organizer.organizer_email,
+                    'organizer_name': organizer.organizer_name,
+                } for organizer in eventDetailsDto.organizer_details
+            ],
+            'attendee_details': [
+                {
+                    'attendee_id': attendee.attendee_id,
+                    'attendee_email':attendee.attendee_email,
+                    'attendee_name':attendee.attendee_name
+                 } for attendee in eventDetailsDto.attendee_details
+            ],
+            'booking_cancelled_users': [
+                {
+                    'attendee_id': attendee.attendee_id,
+                    'attendee_email':attendee.attendee_email,
+                    'attendee_name':attendee.attendee_name
+                 } for attendee in eventDetailsDto.booking_cancelled_users
+            ],
+            'booking_pending_users':[
+                {
+                    'attendee_id': attendee.attendee_id,
+                    'attendee_email':attendee.attendee_email,
+                    'attendee_name':attendee.attendee_name
+                 } for attendee in eventDetailsDto.booking_pending_users
+            ],
+        
+            'ticket_details': [
+                {
+                    'ticket_price': ticket.ticket_price
+                } for ticket in eventDetailsDto.ticket_details
+            ]
+        }
