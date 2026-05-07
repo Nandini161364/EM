@@ -12,3 +12,10 @@ class EventStorageInterface(ABC):
     @abstractmethod
     def create_ticket(self, event_id: int, price: float):
         pass
+    @abstractmethod
+    def get_event_details(self, event_id:int):
+        pass
+
+    @abstractmethod
+    def is_valid_event(self, event_id:int):
+        pass
