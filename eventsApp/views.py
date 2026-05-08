@@ -168,7 +168,7 @@ def give_feedback(request):
 
         return Response(response, 200)
     except InvalidDataException as e:
-        return Response(FeedbackPresenter.invalid_data(), 400)
+        return Response(FeedbackPresenter().invalid_data(), 400)
     except EventNotFoundException as e:
         return Response(FeedbackPresenter().invalid_event(), 400)
     except AttendeeDoesnotExist as e:
