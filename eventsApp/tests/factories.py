@@ -75,10 +75,14 @@ class EventFactory(factory.django.DjangoModelFactory):
         max=100
     )
 
-    ticket = factory.RelatedFactory(
-        TicketFactory,
-        factory_related_name='event'
-    )
+    # ticket = factory.RelatedFactory(
+    #     TicketFactory,
+    #     factory_related_name='event'
+    # )
+    @factory.post_generation
+    def ensure_ticket(self, create, extracted, **kwargs):
+        if create:
+            TicketFactory.create(event=self)
 
 
 class BookingFactory(factory.django.DjangoModelFactory):
