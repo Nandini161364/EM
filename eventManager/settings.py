@@ -150,7 +150,7 @@ REST_FRAMEWORK = {
 AUTH_USER_MODEL = 'eventsApp.User'
 
 sentry_sdk.init(
-    dsn=os.getenv("SENTRY_DSN"),
+    dsn="https://903200c2514170b3fca68d5aac1b4a90@o4511353774014464.ingest.de.sentry.io/4511353794461776",
 
     send_default_pii=False,
 
