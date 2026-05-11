@@ -3,6 +3,9 @@ from eventsApp.interactors.storage_interfaces.user_storage_interface import User
 
 from eventsApp.exceptions.exceptions import InvalidDataException, UserAlreadyExitsException
 
+
+from eventsApp.utils.email_service import EmailService
+
 class CreateUserInteractor:
     def __init__(self, storage: UserStorageInterface, presenter: UserPresenterInterface):
         self.storage = storage
@@ -19,9 +22,13 @@ class CreateUserInteractor:
             raise InvalidDataException("Data can't be empty")
         if role not in ('organizer', 'attendee'):
             raise InvalidDataException("Role must be organizer or attendee")
-        is_existing_mail = self.storage.get_person_by_mail(email)
-        if is_existing_mail:
+        
+        user_exists = self.storage.user_exists(email, phone_number)
+
+        if user_exists:
             raise UserAlreadyExitsException("User is already there")
+        
         response = self.storage.create_user(userDto)
+        EmailService.send_registration_email(userDto)
 
         return self.presenter.create_user_success_response(response)

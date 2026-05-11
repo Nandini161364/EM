@@ -1,4 +1,6 @@
 from eventsApp.models import User
+from django.db.models import Q
+
 
 class UserStorage:
     def create_user(self, userDto):
@@ -12,7 +14,8 @@ class UserStorage:
         response = User.objects.create_user(username=username, email=email, password=password, role=role, phone_number=phone_number)
         return response.id
     
-    def get_person_by_mail(self, email):
+    def user_exists(self, email, phone):
         self.email = email
+        self.phone = phone
 
-        return User.objects.filter(email=email).exists()
+        return User.objects.filter(Q(email=email) | Q(phone_number=phone)).exists()
