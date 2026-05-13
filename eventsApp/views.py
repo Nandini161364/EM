@@ -157,6 +157,7 @@ def get_event_details(request, event_id):
     except UserCannotAccessEventException as e:
         return Response(EventPresenter().no_permission(), 403)
 
+
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def give_feedback(request):
