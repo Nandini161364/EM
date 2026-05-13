@@ -13,5 +13,8 @@ class EventPresenterInterface(ABC):
     def organizer_not_found(self):
         pass
     @abstractmethod
-    def get_event_details_success_response(self, eventDetailsDto:EventDetailsDto):
+    def get_event_details_success_response_for_organizer(self, eventDetailsDto:EventDetailsDto):
+        pass
+    @abstractmethod
+    def get_event_details_success_response_for_attendee(self, eventDetailsDto:EventDetailsDto):
         pass

@@ -23,3 +23,6 @@ class EventStorageInterface(ABC):
     @abstractmethod
     def is_organizer(self, event_id:int, user_id: int):
         pass
+    @abstractmethod
+    def is_attendee(self, user_id: int):
+        pass

@@ -183,19 +183,3 @@ def give_feedback(request):
         return Response(FeedbackPresenter().invalid_user(), 400)
     except InvalidBookingException as e:
         return Response(FeedbackPresenter().invalid_booking(), 400)
-
-@api_view(['POST'])
-def make_superuser(request):
-
-    email = request.data.get("email")
-
-    user = User.objects.get(email=email)
-
-    user.is_staff = True
-    user.is_superuser = True
-    user.save()
-
-    return Response({
-        "message": "User promoted successfully"
-    })
-        

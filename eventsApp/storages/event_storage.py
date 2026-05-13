@@ -27,8 +27,13 @@ class EventStorage(EventStorageInterface):
             return None
     def is_organizer(self, event_id, user_id):
         try:
-            return Event.objects.filter(id=event_id, organizer__id=user_id).exists()
+            return Event.objects.filter(id=event_id, organizer__id=user_id, ).exists()
         except Event.DoesNotExist:
+            return None
+    def is_attendee(self, user_id):
+        try:
+            return User.objects.filter(id=user_id).exists()
+        except Booking.DoesNotExist:
             return None
          
     def get_event_details(self, event_id):

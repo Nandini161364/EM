@@ -11,22 +11,6 @@ class User(AbstractUser):
     role = models.CharField(max_length=20, choices=ROLE_CHOICES)
     phone_number = models.CharField(max_length=15, unique=True)
 
-# Create your models here.
-# class Person(models.Model):
-#     name = models.CharField(max_length=100)
-#     email = models.EmailField(unique=True)
-#     password = models.CharField(max_length=100)
-
-#     def __str__(self):
-#         return self.name
-
-# class Organizer(models.Model):
-#     person = models.OneToOneField(User, on_delete=models.CASCADE, related_name='organizer')
-#     organization_name = models.CharField(max_length=100)
-#     organization_email = models.EmailField(unique=True)
-
-#     def __str__(self):
-#         return self.organization_name
 
     
 class Event(models.Model):
