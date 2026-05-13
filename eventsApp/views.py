@@ -91,8 +91,6 @@ def register_user(request):
     except InvalidDataException as e:
         return Response(UserPresenter().invalid_data(), 400)
 
-
-
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def event_booking(request):
