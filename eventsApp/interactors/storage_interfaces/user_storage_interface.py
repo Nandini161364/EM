@@ -9,3 +9,7 @@ class UserStorageInterface(ABC):
     @abstractmethod
     def get_existing_user_fields(self, username: str, email: str, phone_number: str):
         pass
+
+    @abstractmethod
+    def get_user_profile(self, user_id):
+        pass

@@ -26,6 +26,11 @@ class EventPresenter(EventPresenterInterface):
         return {
             "message": "User doesn't have permission to access the details"
         }
+    
+    def unauthorized_role(self):
+        return {
+            "message": "User role not authorized for this action"
+        }
 
     def get_event_details_success_response_for_organizer(self, eventDetailsDto):
         return {
@@ -97,4 +102,23 @@ class EventPresenter(EventPresenterInterface):
                 } for ticket in eventDetailsDto.ticket_details
             ],
             'available_seats': eventDetailsDto.available_seats
+        }
+    
+
+    def list_events_response(self, events):
+        return {
+            'events': [
+                {
+                    'id': event.id,
+                    'event_title': event.event_title,
+                    'description': event.description,
+                    'start_date': event.start_date,
+                    'end_date': event.end_date,
+                    'venue': event.venue,
+                    'maximum_attendees': event.maximum_attendees,
+                    'organizer_details': event.organizer_details,
+                    'ticket_details': event.ticket_details,
+                    'available_seats': event.available_seats
+                } for event in events
+            ]
         }

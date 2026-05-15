@@ -18,6 +18,12 @@ class UserStorage:
             raise UserAlreadyExitsException("User already exists")
 
         return response.id
+    
+    def get_user_profile(self, user_id):
+        try:
+            return User.objects.get(id=user_id)
+        except User.DoesNotExist:
+            return None
 
     def get_existing_user_fields(self, username, email, phone_number):
         existing_users = User.objects.filter(

@@ -75,3 +75,16 @@ class FeedbackDto:
     comment: str
     event_id: int
     attendee_id: int
+
+@dataclass
+class ListEventDto:
+    id: int
+    event_title: str
+    description: str
+    start_date: datetime
+    end_date: datetime
+    venue: str
+    maximum_attendees: int
+    organizer_details: dict
+    ticket_details: List[dict]
+    available_seats: int

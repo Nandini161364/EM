@@ -29,9 +29,6 @@ from eventsApp.interactors.feedback_interactor import FeedBackInteractor
 
 from eventsApp.exceptions.exceptions import OrganizerNotFoundException, InvalidDataException, UserAlreadyExitsException, EventDoesnotExistException, AttendeeDoesnotExist, TicketsNotAvailableException, AlreadyBookedException, InvalidBookingIdException, EventNotFoundException, InvalidBookingException, UserCannotCreateEventException, UserCannotAccessEventException
 
-from django.contrib.auth import get_user_model
-User = get_user_model()
-
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -93,6 +90,19 @@ def register_user(request):
 
 
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_profile(request):
+    try:
+        user_id = request.user.id
+        interactor = CreateUserInteractor(storage=UserStorage(), presenter=UserPresenter())
+        response = interactor.get_user_profile(user_id)
+        return Response(response, 200)
+    except AttendeeDoesnotExist as e:
+        return Response(UserPresenter().invalid_user(), 400)
+    except Exception as e:
+        return Response(UserPresenter().invalid_user(), 400)
+
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def event_booking(request):
@@ -150,7 +160,7 @@ def get_event_details(request, event_id):
         user_id = request.user.id
         interactor = GetEventDetailsInteractor(storage=EventStorage(), presenter = EventPresenter())
 
-        response = interactor.get_event_details(event_id, user_id)
+        response = interactor.get_event_details_by_id(event_id, user_id)
 
         return Response(response, 200)
     except EventNotFoundException as e:
@@ -185,3 +195,33 @@ def give_feedback(request):
         return Response(FeedbackPresenter().invalid_user(), 400)
     except InvalidBookingException as e:
         return Response(FeedbackPresenter().invalid_booking(), 400)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def list_organizer_events(request):
+    try:
+        user_id = request.user.id
+        interactor = GetEventDetailsInteractor(storage=EventStorage(), presenter=EventPresenter())
+        response = interactor.list_organizer_events(user_id)
+        return Response(response, 200)
+    except UserCannotAccessEventException as e:
+        return Response(EventPresenter().unauthorized_role(), status=403)
+    except EventNotFoundException as e:
+        return Response(EventPresenter().invalid_data(), 400)
+    except Exception as e:
+        return Response(EventPresenter().invalid_data(), 400)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def list_attendee_events(request):
+    try:
+        user_id = request.user.id
+        interactor = GetEventDetailsInteractor(storage=EventStorage(), presenter=EventPresenter())
+        response = interactor.list_attendee_events(user_id)
+        return Response(response, 200)
+    except UserCannotAccessEventException as e:
+        return Response(EventPresenter().unauthorized_role(), status=403)
+    except EventNotFoundException as e:
+        return Response(EventPresenter().invalid_data(), 400)
+    except Exception as e:
+        return Response(EventPresenter().invalid_data(), 400)
