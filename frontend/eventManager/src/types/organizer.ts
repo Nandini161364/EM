@@ -12,12 +12,13 @@ interface Event {
     available_seats: number;
 }
 
+
 export interface Organizer {
-    organizer_id: number | string;
+    organizer_id: number;
     organizer_name: string;
     organizer_email: string;
-    organizer_phone: string;
 }
+
 
 export interface Ticket {
     ticket_price: number;

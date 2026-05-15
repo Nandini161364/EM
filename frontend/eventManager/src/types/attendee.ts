@@ -19,6 +19,8 @@
 //                     'available_seats': event.available_seats
 //                 }
 
+import { type Organizer } from "./organizer";
+
 interface Event {
     id: number;
     event_title: string;
@@ -32,14 +34,16 @@ interface Event {
     available_seats: number;
 }
 
-export interface Organizer {
-    organizer_id: number;
-    organizer_name: string;
-    organizer_email: string;
-}
 
 export interface Ticket {
     ticket_price: number;
+}
+
+
+export interface Attendee {
+    attendee_id: number;
+    attendee_name: string;
+    attendee_email: string;
 }
 
 

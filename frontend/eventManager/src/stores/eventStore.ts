@@ -1,6 +1,5 @@
 import { makeAutoObservable } from "mobx";
-import { type Event } from "../types/home";
-import { type CreateEvent } from "../types/event";
+import { type Event } from "../types/event";
 
 class EventStore {
     organizerEvents: Event[] = [];
@@ -25,6 +24,15 @@ class EventStore {
     clearEventsList() {
         this.organizerEvents = [];
         this.attendeeEvents = [];
+    }
+
+    getLatestEvents() {
+        const latestEvents = this.organizerEvents.filter(event => {
+            const eventDate = new Date(event.start_date);
+            const currentDate = new Date();
+            return eventDate >= currentDate;
+        });
+        return latestEvents;
     }
 }
 
