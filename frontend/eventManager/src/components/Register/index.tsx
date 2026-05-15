@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { type Role } from "../../types/register";
 import { type SubmitEvent } from "react";
 
@@ -15,8 +15,9 @@ const Register = () => {
   const navigate = useNavigate();
 
   const accessToken = localStorage.getItem("access_token");
+  
   if (accessToken) {
-    navigate("/");
+    return <Navigate to="/" replace />;
   }
 
   const handleSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
@@ -45,7 +46,7 @@ const Register = () => {
       if (response?.ok === true) {
         setError("");
         console.log(data);
-        navigate("/");
+        navigate("/login");
       } else {
         const message = data.message ?? data.detail ?? "Registration failed";
         setError(message);
@@ -53,7 +54,9 @@ const Register = () => {
       }
     } catch (error) {
       console.error("Error registering:", error);
-      setError(error.message || "An error occurred during registration");
+      const message =
+        error instanceof Error ? error.message : "An error occurred during registration";
+      setError(message);
     }
   };
 
@@ -175,7 +178,7 @@ const Register = () => {
 
             <div className="signin-link">
               <span>Already registered? </span>
-              <a href="/login">Sign in</a>
+              <Link to="/login">Sign in</Link>
             </div>
           </form>
         </div>
