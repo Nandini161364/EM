@@ -1,7 +1,7 @@
 from eventsApp.interactors.presenter_interfaces.user_presenter_interface import UserPresenterInterface
 from eventsApp.interactors.storage_interfaces.user_storage_interface import UserStorageInterface
 
-from eventsApp.exceptions.exceptions import InvalidDataException, UserAlreadyExitsException
+from eventsApp.exceptions.exceptions import InvalidDataException, UserAlreadyExitsException, AttendeeDoesnotExist
 
 
 from eventsApp.utils.email_service import EmailService
@@ -10,6 +10,12 @@ class CreateUserInteractor:
     def __init__(self, storage: UserStorageInterface, presenter: UserPresenterInterface):
         self.storage = storage
         self.presenter = presenter
+
+    def get_user_profile(self, user_id):
+        user_profile = self.storage.get_user_profile(user_id)
+        if user_profile is None:
+            raise AttendeeDoesnotExist("User not found")
+        return self.presenter.get_user_profile_response(user_profile)
     
     def create_user(self, userDto):
         name = userDto.username.strip() if userDto.username else userDto.username

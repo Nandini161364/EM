@@ -12,3 +12,16 @@ class UserPresenter:
         return {
             "message": message
         }
+    def get_user_profile_response(self, user_profile):
+        if user_profile is None:
+            return None
+        return {
+            "id": user_profile.id,
+            "username": user_profile.username,
+            "role": user_profile.role,
+        }
+    
+    def invalid_user(self):
+        return {
+            "message": "User not found"
+        }

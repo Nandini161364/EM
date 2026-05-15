@@ -2,7 +2,10 @@ from django.db.models import Prefetch
 
 from eventsApp.models import Booking, Event, User, Ticket
 from eventsApp.interactors.storage_interfaces.event_storage_interface import EventStorageInterface
-from eventsApp.adaptors.dtos import EventDetailsDto, OrganizerDetailsDto, AttendeeDetailsDto, TicketDetailsDto
+from eventsApp.adaptors.dtos import EventDetailsDto, OrganizerDetailsDto, AttendeeDetailsDto, TicketDetailsDto, ListEventDto
+from eventsApp.exceptions.exceptions import EventNotFoundException
+
+from django.db.models import F
 
 class EventStorage(EventStorageInterface):
     def get_organizer(self, organizer):
@@ -25,7 +28,7 @@ class EventStorage(EventStorageInterface):
             return Event.objects.filter(id=event_id).exists()
         except Event.DoesNotExist:
             return None
-    def is_organizer(self, event_id, user_id):
+    def is_organizer_of_event(self, event_id, user_id):
         try:
             return Event.objects.filter(id=event_id, organizer__id=user_id, ).exists()
         except Event.DoesNotExist:
@@ -36,7 +39,7 @@ class EventStorage(EventStorageInterface):
         except Booking.DoesNotExist:
             return None
          
-    def get_event_details(self, event_id):
+    def get_event_details_by_id(self, event_id):
         booking_queryset = Booking.objects.select_related('attendee').only(
             'booking_status',
             'attendee__id',
@@ -113,3 +116,85 @@ class EventStorage(EventStorageInterface):
         )
 
         return eventData
+
+    def list_events(self):
+        try:
+            events = Event.objects.select_related('organizer').prefetch_related(
+                Prefetch('tickets', queryset=Ticket.objects.only('price', 'event_id')),
+                Prefetch('bookings', queryset=Booking.objects.filter(booking_status='booked').only('booking_status'))
+            ).all()
+            
+            events_dtos = []
+            for event in events:
+                available_seats = event.maximum_attendees - event.bookings.count()
+                event_dto = ListEventDto(
+                    id=event.id,
+                    event_title=event.event_title,
+                    description=event.description,
+                    start_date=event.start_date,
+                    end_date=event.end_date,
+                    venue=event.venue,
+                    maximum_attendees=event.maximum_attendees,
+                    organizer_details={
+                        'organizer_id': event.organizer.id,
+                        'organizer_email': event.organizer.email,
+                        'organizer_name': event.organizer.username,
+                    },
+                    ticket_details=[
+                        {'ticket_price': ticket.price} for ticket in event.tickets.all()
+                    ],
+                    available_seats=available_seats
+                )
+                events_dtos.append(event_dto)
+            
+            return events_dtos
+        except Exception as e:
+            raise EventNotFoundException(f"Error fetching events: {str(e)}")
+
+    def list_organizer_events(self, userId):
+        try:
+            events = Event.objects.filter(organizer__id=userId).select_related('organizer').prefetch_related(
+                Prefetch('tickets', queryset=Ticket.objects.only('price', 'event_id')),
+                Prefetch('bookings', queryset=Booking.objects.filter(booking_status='booked').only('booking_status'))
+            )
+            
+            events_dtos = []
+            for event in events:
+                available_seats = event.maximum_attendees - event.bookings.count()
+                event_dto = ListEventDto(
+                    id=event.id,
+                    event_title=event.event_title,
+                    description=event.description,
+                    start_date=event.start_date,
+                    end_date=event.end_date,
+                    venue=event.venue,
+                    maximum_attendees=event.maximum_attendees,
+                    organizer_details={
+                        'organizer_id': event.organizer.id,
+                        'organizer_email': event.organizer.email,
+                        'organizer_name': event.organizer.username,
+                    },
+                    ticket_details=[
+                        {'ticket_price': ticket.price} for ticket in event.tickets.all()
+                    ],
+                    available_seats=available_seats
+                )
+                events_dtos.append(event_dto)
+            
+            return events_dtos
+        except Exception as e:
+            raise EventNotFoundException(f"Error fetching organizer events: {str(e)}")
+    
+    def is_user_organizer(self, user_id):
+        try:
+            user = User.objects.get(id=user_id)
+            return user.role == 'organizer'
+        except User.DoesNotExist:
+            return False
+
+    def is_user_attendee(self, user_id):
+        try:
+            user = User.objects.get(id=user_id)
+            return user.role == 'attendee'
+        except User.DoesNotExist:
+            return False

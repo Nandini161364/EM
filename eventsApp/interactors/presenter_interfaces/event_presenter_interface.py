@@ -18,3 +18,6 @@ class EventPresenterInterface(ABC):
     @abstractmethod
     def get_event_details_success_response_for_attendee(self, eventDetailsDto:EventDetailsDto):
         pass
+    @abstractmethod
+    def list_events_response(self, events):
+        pass
