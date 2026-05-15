@@ -6,6 +6,8 @@ import authStore from "../../../stores/authstore";
 import { apiUrl, authenticatedFetch } from "../../../utils/api";
 import { useNavigate } from "react-router-dom";
 
+import "./index.css";
+
 const NewEvent = observer(() => {
     const [eventTitle, setEventTitle] = useState<string>("");
     const [description, setDescription] = useState<string>("");

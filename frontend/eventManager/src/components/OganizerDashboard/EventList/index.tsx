@@ -1,14 +1,11 @@
 import eventStore from "../../../stores/eventStore";
 import { observer } from "mobx-react-lite";
 import "./index.css";
+import { type EventListComponentProps } from "../../../types/event";
 
-const RecentEvents = observer(() => {
-    const events = eventStore.organizerEvents;
-    const latestEvents = events.filter(event => {
-        const eventDate = new Date(event.start_date);
-        const currentDate = new Date();
-        return eventDate >= currentDate;
-    });
+const EventList = observer((props: EventListComponentProps) => {
+    const {eventsList} = props;
+
 
     const formatDate = (date: string) => {
         return new Intl.DateTimeFormat("en-US", {
@@ -28,8 +25,8 @@ const RecentEvents = observer(() => {
                 <span>Actions</span>
             </div>
             <div className="recent-events-list">
-                {latestEvents.length > 0 ? (
-                    latestEvents.map((event) => {
+                {eventsList.length > 0 ? (
+                    eventsList.map((event) => {
                         const bookedCount = event.total_bookings_count ?? event.maximum_attendees - event.available_seats;
                         const capacityPercentage = Math.min(
                             Math.round((bookedCount / event.maximum_attendees) * 100),
@@ -64,4 +61,4 @@ const RecentEvents = observer(() => {
     );
 });
 
-export default RecentEvents;
+export default EventList;

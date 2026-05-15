@@ -3,7 +3,7 @@ import "./index.css";
 import eventStore from "../../stores/eventStore";
 import authStore from "../../stores/authstore";
 
-import RecentEvents from "./RecentEvents";
+import EventList from "./EventList";
 import { observer } from "mobx-react-lite";
 import { useNavigate } from "react-router-dom";
 
@@ -22,6 +22,7 @@ const OrganizerDashboard = observer(() => {
         const ticketPrice = event.ticket_details[0]?.ticket_price ?? 0;
         return total + bookingsCount * ticketPrice;
     }, 0);
+
     const upcomingEvents = events.filter((event) => new Date(event.start_date) >= new Date()).length;
     const initials = authStore.username
         .split(" ")
@@ -39,7 +40,7 @@ const OrganizerDashboard = observer(() => {
     const renderCreateEventPage = () => {
         navigate('/organizer/events/create');
     };
-    
+
     return (
         <section className="organizer-dashboard">
             <div className="organizer-dashboard-header">
@@ -121,7 +122,7 @@ const OrganizerDashboard = observer(() => {
                             <button className="filter-button">Filter</button>
                         </div>
                     </div>
-                    <RecentEvents />
+                    <EventList eventsList={eventStore.getLatestEvents()} />
                 </div>
             </div>
         </section>

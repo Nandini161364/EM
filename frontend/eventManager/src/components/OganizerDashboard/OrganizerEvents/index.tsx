@@ -1,18 +1,11 @@
 import eventStore from "../../../stores/eventStore";
+import EventList from "../EventList";
 
 const OrganizerEvents = () => {
-    const events = eventStore.organizerEvents;
-    
+
     return (
-        <div className="organizer-events">
-            <h2>Organizer Events</h2>
-            <ul>
-                {events.map(event => (
-                    <li key={event.id}>{event.event_title}</li>
-                ))}
-            </ul>
-        </div>
-    )
+        <EventList eventsList={eventStore.organizerEvents} />
+    );
 }
 
 export default OrganizerEvents;
